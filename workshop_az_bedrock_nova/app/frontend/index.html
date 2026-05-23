@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>AWS AI Assistant</title>
+   <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+<body>
+   <div class="chat-container">
+       <div class="chat-header">
+           <h1>AWS Cloud Practitioner Assistente</h1>
+           <p>
+               Por Alejandro Sajonero con Amazon Bedrock + Nova Lite
+           </p>
+       </div>
+
+
+       <div id="chat-box" class="chat-box">
+           <div class="message ai">
+               👋 ¡Hola! Pregúntame lo que quieras sobre AWS Cloud Practitioner.
+           </div>
+       </div>
+       <div class="input-container">
+
+
+           <textarea
+               id="question"
+               placeholder="Preguntar algo sobre AWS..."
+           ></textarea>
+           <button onclick="askQuestion()">
+               Preguntar
+           </button>
+       </div>
+   </div>
+   <script src="app.js"></script>
+</body>
+</html>
