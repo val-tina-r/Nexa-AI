@@ -2,7 +2,7 @@
 
 ## AWS
 
-- Cuenta AWS Academy
+- Cuenta AWS
 - Región us-east-1
 
 ## Servicios
