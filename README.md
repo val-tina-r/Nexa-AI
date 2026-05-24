@@ -18,21 +18,15 @@ Nexa-AI/
 ├── architecture/
 │   └── architecture.jpeg
 ├── docs/
-│   └── README.md
 ├── infrastructure/
 │   └── terraform/
 │       ├── main.tf
 │       ├── modules/
 │       │   ├── cloudfront/
-│       │   │   └── README.md
 │       │   └── s3/
-│       │       └── README.md
 │       ├── outputs.tf
 │       └── provider.tf
 ├── knowledge-base/
-│   └── README.md
 ├── monitoring/
-│   └── README.md
 └── prompts/
-    └── README.md
 ```
