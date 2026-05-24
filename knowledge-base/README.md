@@ -1,1 +1,0 @@
-<!--  conocimiento que el asistente debe consultar --> 
