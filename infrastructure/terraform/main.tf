@@ -91,8 +91,8 @@ resource "aws_lambda_function" "ai_api" {
   role = aws_iam_role.lambda_role.arn
   handler = "app.lambda_handler"
   runtime = "python3.12"
-  filename = "../app/lambda/lambda.zip"
-  source_code_hash = filebase64sha256("../app/lambda/lambda.zip")
+  filename = "../../app/backend/lambda/lambda.zip"
+  source_code_hash = filebase64sha256("../../app/backend/lambda/lambda.zip")
 }
 
 resource "aws_apigatewayv2_api" "api" {
