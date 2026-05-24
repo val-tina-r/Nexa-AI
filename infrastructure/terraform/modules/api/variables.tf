@@ -1,0 +1,10 @@
+variable "app_name" { type = string }
+variable "region" { type = string }
+variable "api_name" { type = string }
+variable "allowed_origins" { type = list(string) }
+variable "cognito_issuer" { type = string }
+variable "cognito_user_pool_client_id" { type = string }
+variable "generation_model_id" { type = string }
+variable "knowledge_base_id" { type = string }
+variable "lambda_source_dir" { type = string }
+variable "common_tags" { type = map(string) }

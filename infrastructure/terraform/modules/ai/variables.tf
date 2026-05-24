@@ -1,0 +1,12 @@
+variable "app_name" { type = string }
+variable "region" { type = string }
+variable "account_id" { type = string }
+variable "partition" { type = string }
+variable "documents_bucket_name" { type = string }
+variable "vector_bucket_name" { type = string }
+variable "vector_index_name" { type = string }
+variable "embedding_model_id" { type = string }
+variable "embedding_dimensions" { type = number }
+variable "generation_model_id" { type = string }
+variable "enable_knowledge_base" { type = bool }
+variable "common_tags" { type = map(string) }
