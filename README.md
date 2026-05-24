@@ -3,7 +3,6 @@
 ## Estructura del proyecto
 
 ```
-Nexa-AI/
 ├── .gitignore
 ├── README.md
 ├── app/
@@ -24,7 +23,8 @@ Nexa-AI/
 │       ├── modules/
 │       │   ├── cloudfront/
 │       │   └── s3/
-│       ├── outputs.tf
+│       ├── outputsNexa-AI/
+.tf
 │       └── provider.tf
 ├── knowledge-base/
 ├── monitoring/
