@@ -4,6 +4,8 @@
 *.tfstate.*
 .terraform.lock.hcl
 
+#lambda
+*.zip
 # Variables sensibles
 *.tfvars
 *.tfvars.json
