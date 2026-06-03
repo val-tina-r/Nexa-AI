@@ -29,7 +29,6 @@ jobs:
       - name: Build Lambda
         run: |
           cd ../app/backend/src/lambda
-          pip install -r requirements.txt -t .
           zip -r lambda.zip .
 
       - uses: hashicorp/setup-terraform@v3
