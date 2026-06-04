@@ -1,9 +1,7 @@
 locals {
   embedding_model_arn = "arn:${var.partition}:bedrock:${var.region}::foundation-model/${var.embedding_model_id}"
-
-  vector_bucket_arn = "arn:${var.partition}:s3vectors:${var.region}:${data.aws_caller_identity.current.account_id}:bucket/${var.vector_bucket_name}"
-
-  vector_index_arn = "arn:${var.partition}:s3vectors:${var.region}:${data.aws_caller_identity.current.account_id}:bucket/${var.vector_bucket_name}/index/${var.vector_index_name}"
+  vector_bucket_arn   = "arn:${var.partition}:s3vectors:${var.region}:${var.account_id}:bucket/${var.vector_bucket_name}"
+  vector_index_arn    = "arn:${var.partition}:s3vectors:${var.region}:${var.account_id}:bucket/${var.vector_bucket_name}/index/${var.vector_index_name}"
 }
 
 resource "aws_s3_bucket" "documents" {
