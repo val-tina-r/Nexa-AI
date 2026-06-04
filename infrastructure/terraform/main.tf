@@ -28,7 +28,7 @@ module "ai" {
 
   app_name   = var.app_name
   region     = var.region
-  account_id = var.account_id
+  account_id = data.aws_caller_identity.current.account_id
   partition  = var.partition
 
   documents_bucket_name = var.documents_bucket_name
