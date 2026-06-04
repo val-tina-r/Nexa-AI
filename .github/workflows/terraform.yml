@@ -34,10 +34,14 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var="account_id=${{ secrets.AWS_ACCOUNT_ID }}"
+        run: terraform plan \
+          -var="account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
+          -var='allowed_origins=["http://localhost:3000"]'
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var="account_id=${{ secrets.AWS_ACCOUNT_ID }}"
+        run: terraform apply -auto-approve \
+          -var="account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
+          -var='allowed_origins=["http://localhost:3000"]'
 
       - name: Get Terraform Outputs
         run: |
