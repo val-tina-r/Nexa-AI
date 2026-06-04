@@ -133,6 +133,27 @@ const ChatPane = forwardRef(function ChatPane(
                 ) : (
                   <Message role={m.role}>
                     <div className="whitespace-pre-wrap">{m.content}</div>
+                    {m.role === "assistant" && m.citations?.length > 0 && (
+                      <div className="mt-3 border-t border-zinc-200 pt-2 dark:border-zinc-700">
+                        <h4 className="text-sm font-semibold">
+                          Fuentes consultadas
+                        </h4>
+
+                        {m.citations.map((citation, index) => (
+                          <div key={index} className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+                            <p>
+                              {citation.source?.s3Location?.uri || citation.s3Location?.uri || citation.uri}
+                            </p>
+
+                            {citation.excerpt && (
+                              <p className="italic">
+                                {citation.excerpt}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {m.role === "user" && (
                       <div className="mt-1 flex gap-2 text-[11px] text-zinc-500">
                         <button className="inline-flex items-center gap-1 hover:underline" onClick={() => startEdit(m)}>

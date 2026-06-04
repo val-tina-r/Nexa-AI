@@ -10,6 +10,10 @@ output "knowledge_base_id" {
   value = module.ai.knowledge_base_id
 }
 
+output "data_source_id" {
+  value = module.ai.data_source_id
+}
+
 output "user_pool_id" {
   value = module.auth.user_pool_id
 }

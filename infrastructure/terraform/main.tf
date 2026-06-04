@@ -69,3 +69,12 @@ module "api" {
 
   common_tags = var.common_tags
 }
+
+module "frontend" {
+  source = "./modules/frontend"
+
+  app_name     = var.app_name
+  bucket_name  = var.frontend_bucket_name
+
+  common_tags  = var.common_tags
+}

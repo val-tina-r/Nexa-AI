@@ -9,6 +9,16 @@ resource "aws_s3_bucket" "documents" {
   tags   = var.common_tags
 }
 
+resource "aws_s3_object" "knowledge_documents" {
+  for_each = fileset("${path.root}/../../knowledge-base", "*.pdf")
+
+  bucket = aws_s3_bucket.documents.id
+  key    = each.value
+
+  source = "${path.root}/../../knowledge-base/${each.value}"
+  etag   = filemd5("${path.root}/../../knowledge-base/${each.value}")
+}
+
 resource "aws_s3_bucket_public_access_block" "documents" {
   bucket = aws_s3_bucket.documents.id
 

@@ -14,24 +14,18 @@ jobs:
         working-directory: infrastructure/terraform
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build Lambda
-        working-directory: app/backend/src/lambda
-        run: zip -r lambda.zip .
-
-      - uses: hashicorp/setup-terraform@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
@@ -40,7 +34,49 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan
+
+      - name: Get Terraform Outputs
+        run: |
+          echo "KB_ID=$(terraform output -raw knowledge_base_id)" >> $GITHUB_ENV
+          echo "DS_ID=$(terraform output -raw data_source_id)" >> $GITHUB_ENV
+
+      - name: Wait for Knowledge Base to become ACTIVE
+        run: |
+          echo "Waiting for Knowledge Base..."
+
+          for i in {1..20}; do
+            STATUS=$(aws bedrock-agent get-knowledge-base \
+              --knowledge-base-id $KB_ID \
+              --query "knowledgeBase.status" \
+              --output text)
+
+            echo "Current status: $STATUS"
+
+            if [ "$STATUS" = "ACTIVE" ]; then
+              echo "Knowledge Base is ACTIVE"
+              exit 0
+            fi
+
+            sleep 15
+          done
+
+          echo "Knowledge Base did not become ACTIVE in time"
+          exit 1
+
+      - name: Start Knowledge Base Ingestion
+        run: |
+          echo "Starting ingestion job..."
+
+          aws bedrock-agent start-ingestion-job \
+            --knowledge-base-id $KB_ID \
+            --data-source-id $DS_ID
+
+      - name: Show Ingestion Jobs
+        run: |
+          aws bedrock-agent list-ingestion-jobs \
+            --knowledge-base-id $KB_ID \
+            --data-source-id $DS_ID

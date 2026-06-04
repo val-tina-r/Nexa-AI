@@ -32,6 +32,8 @@ next-env.d.ts
 *.tfstate.*
 .terraform.lock.hcl
 crash.log
+tfplan
+*.tfplan
 
 #lambda
 *.zip

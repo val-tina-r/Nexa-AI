@@ -62,22 +62,38 @@ def _rag_answer(message: str) -> Dict[str, Any]:
                 "knowledgeBaseId": KNOWLEDGE_BASE_ID,
                 "modelArn": model_arn,
                 "generationConfiguration": {
+                    "promptTemplate": {
+                        "textPromptTemplate": """
+                Responde únicamente con la respuesta final para el usuario.
+                No muestres búsquedas, acciones, herramientas utilizadas ni razonamiento interno.
+                Si utilizas documentos de la base de conocimiento, sintetiza la información en lenguaje natural.
+                $search_results$
+                Pregunta: $query$
+                """
+                    },
                     "inferenceConfig": {
                         "textInferenceConfig": {
                             "maxTokens": 700,
                             "temperature": 0.3,
                         }
-                    }
+                    },
                 },
             },
         },
     )
 
     citations = []
+
     for citation in result.get("citations", []):
         for ref in citation.get("retrievedReferences", []):
+
             location = ref.get("location", {})
-            citations.append(location)
+            content = ref.get("content", {})
+
+            citations.append({
+                "source": location,
+                "excerpt": content.get("text", "")
+            })
 
     return {
         "answer": result.get("output", {}).get("text", ""),
@@ -103,6 +119,9 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
 
         if KNOWLEDGE_BASE_ID:
             rag = _rag_answer(message)
+            print("RAG RESULT:")
+            print(json.dumps(rag, ensure_ascii=False))
+            
             return _response(200, rag)
 
         answer = _direct_bedrock_answer(message)

@@ -15,9 +15,9 @@ output "vector_index_arn" {
 }
 
 output "knowledge_base_id" {
-  value = var.enable_knowledge_base ? aws_bedrockagent_knowledge_base.kb[0].id : ""
+  value = aws_bedrockagent_knowledge_base.kb[0].id
 }
 
 output "data_source_id" {
-  value = var.enable_knowledge_base ? aws_bedrockagent_data_source.documents[0].data_source_id : ""
+  value = aws_bedrockagent_data_source.documents[0].data_source_id
 }

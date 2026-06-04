@@ -177,31 +177,91 @@ export default function AIAssistantUI() {
     setThinkingConvId(convId)
 
     const currentConvId = convId
-    setTimeout(() => {
-      // Always clear thinking state and generate response for this specific conversation
-      setIsThinking(false)
-      setThinkingConvId(null)
-      setConversations((prev) =>
-        prev.map((c) => {
-          if (c.id !== currentConvId) return c
-          const ack = `Got it — I'll help with that.`
-          const asstMsg = {
-            id: Math.random().toString(36).slice(2),
-            role: "assistant",
-            content: ack,
-            createdAt: new Date().toISOString(),
-          }
-          const msgs = [...(c.messages || []), asstMsg]
-          return {
-            ...c,
-            messages: msgs,
-            updatedAt: new Date().toISOString(),
-            messageCount: msgs.length,
-            preview: asstMsg.content.slice(0, 80),
-          }
+    
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: content,
         }),
-      )
-    }, 2000)
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setIsThinking(false)
+        setThinkingConvId(null)
+
+        const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: content }),
+        })
+
+        const response = await apiResponse.json()
+        
+        let answer = data.answer || "No se obtuvo respuesta."
+
+        if (answer.includes("Response:")) {
+          answer = answer.split("Response:")[1].trim()
+        }
+        const asstMsg = {
+          id: Math.random().toString(36).slice(2),
+          role: "assistant",
+          content: answer,
+          citations: response.citations || [],
+          createdAt: new Date().toISOString(),
+        }
+
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c.id !== currentConvId) return c
+
+            const msgs = [...(c.messages || []), asstMsg]
+
+            return {
+              ...c,
+              messages: msgs,
+              updatedAt: new Date().toISOString(),
+              messageCount: msgs.length,
+              preview: answer.slice(0, 80),
+            }
+          }),
+        )
+      })
+      .catch((error) => {
+        console.error(error)
+
+        setIsThinking(false)
+        setThinkingConvId(null)
+
+        const asstMsg = {
+          id: Math.random().toString(36).slice(2),
+          role: "assistant",
+          content: "Error consultando el asistente.",
+          createdAt: new Date().toISOString(),
+        }
+
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c.id !== currentConvId) return c
+
+            const msgs = [...(c.messages || []), asstMsg]
+
+            return {
+              ...c,
+              messages: msgs,
+              updatedAt: new Date().toISOString(),
+              messageCount: msgs.length,
+            }
+          }),
+        )
+      })
   }
 
   function editMessage(convId, messageId, newContent) {

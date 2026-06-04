@@ -29,6 +29,7 @@ variable "logout_urls" {
 
 variable "allowed_origins" {
   type = list(string)
+  
 }
 
 variable "documents_bucket_name" {
@@ -65,4 +66,9 @@ variable "lambda_source_dir" {
 
 variable "common_tags" {
   type = map(string)
+}
+
+variable "frontend_bucket_name" {
+  description = "Nombre del bucket del frontend"
+  type        = string
 }

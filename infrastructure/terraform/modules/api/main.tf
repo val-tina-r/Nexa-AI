@@ -129,8 +129,8 @@ resource "aws_apigatewayv2_integration" "lambda" {
 resource "aws_apigatewayv2_route" "chat" {
   api_id             = aws_apigatewayv2_api.http.id
   route_key          = "POST /chat"
-  authorization_type = "JWT"
-  authorizer_id      = aws_apigatewayv2_authorizer.jwt.id
+  authorization_type = "NONE"
+  #authorizer_id      = aws_apigatewayv2_authorizer.jwt.id
   target             = "integrations/${aws_apigatewayv2_integration.lambda.id}"
 }
 

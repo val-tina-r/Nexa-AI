@@ -11,18 +11,52 @@ export default function Home() {
   ]);
   const [historial, setHistorial] = useState<string[]>(["Consulta de Nómina", "Políticas AWS S3"]);
 
-  const enviarMensaje = () => {
-    if (!mensaje.trim()) return;
-    if (!historial.includes(mensaje.substring(0, 20))) {
-      setHistorial([mensaje.substring(0, 25) + "...", ...historial]);
+const enviarMensaje = async () => {
+  const nuevos = [...chats, { rol: "usuario", contenido: mensaje }];
+
+  setChats(nuevos);
+  
+  try {
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: mensaje,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Error llamando al API");
     }
-    const nuevos = [...chats, { rol: "user", contenido: mensaje }];
-    setChats(nuevos);
-    setMensaje("");
-    setTimeout(() => {
-      setChats([...nuevos, { rol: "bot", contenido: "Respuesta generada mediante RAG (Bedrock + S3)." }]);
-    }, 1000);
-  };
+
+    setChats([
+      ...nuevos,
+      {
+        rol: "bot",
+        contenido: data.answer || "No se recibió respuesta del asistente.",
+      },
+    ]);
+  } catch (error) {
+    console.error(error);
+
+    setChats([
+      ...nuevos,
+      {
+        rol: "bot",
+        contenido: "Ocurrió un error conectando con el asistente.",
+      },
+    ]);
+  }
+};
 
   return (
     <main className={`${darkMode ? "dark" : ""} flex h-screen bg-white dark:bg-black transition-colors duration-500`}>
