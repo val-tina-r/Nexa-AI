@@ -29,7 +29,10 @@ variable "logout_urls" {
 
 variable "allowed_origins" {
   type = list(string)
-  
+
+  default = [
+    "http://localhost:3000"
+  ]
 }
 
 variable "documents_bucket_name" {
